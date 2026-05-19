@@ -1,11 +1,11 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+import { HashRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import tabs from './tabs';
 import './App.css';
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="app">
         <header className="header">
           <div className="header-left">
@@ -36,10 +36,11 @@ function App() {
             {tabs.map((tab) => (
               <Route key={tab.path} path={tab.path} element={<tab.component />} />
             ))}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
