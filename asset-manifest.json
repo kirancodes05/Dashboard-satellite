@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/satellite-dashboard/static/css/main.b3fbe9ea.css",
+    "main.js": "/satellite-dashboard/static/js/main.29fc3cdc.js",
+    "index.html": "/satellite-dashboard/index.html",
+    "main.b3fbe9ea.css.map": "/satellite-dashboard/static/css/main.b3fbe9ea.css.map",
+    "main.29fc3cdc.js.map": "/satellite-dashboard/static/js/main.29fc3cdc.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b3fbe9ea.css",
+    "static/js/main.29fc3cdc.js"
+  ]
+}
