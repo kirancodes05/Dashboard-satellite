@@ -6,7 +6,7 @@ function Brief() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-   fetch(`https://api.nasa.gov/planetary/apod?api_key=d7NTMYG80wDyoCWJ1MGS8K46HEm19towi98Wceu6`)
+   fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.REACT_APP_NASA_KEY}`)   //to use env api_key=${process.env.REACT_APP_NASA_KEY}`
       .then(response => response.json())
       .then(result => {
         setData(result);

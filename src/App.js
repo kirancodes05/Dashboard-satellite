@@ -1,9 +1,45 @@
-import React from 'react';
-import { HashRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom';
+import React, { useState, useRef } from 'react';
+import { HashRouter, NavLink, useLocation, Navigate } from 'react-router-dom';
 import tabs from './tabs';
 import './App.css';
 
+function TabContent({ fetchCount, setFetchCount, lastUpdated, setLastUpdated }) {
+  const location = useLocation();
+  const visitedTabs = useRef(new Set());
+
+  const currentPath = location.pathname || '/';
+  visitedTabs.current.add(currentPath);
+
+  return (
+    <>
+      {tabs.map((tab) => {
+        const isActive = currentPath === tab.path;
+        const hasBeenVisited = visitedTabs.current.has(tab.path);
+
+        if (!hasBeenVisited) return null;
+
+        return (
+          <div
+            key={tab.path}
+            style={{ display: isActive ? 'block' : 'none' }}
+          >
+            <tab.component
+              fetchCount={fetchCount}
+              setFetchCount={setFetchCount}
+              lastUpdated={lastUpdated}
+              setLastUpdated={setLastUpdated}
+            />
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
 function App() {
+  const [fetchCount, setFetchCount] = useState(0);
+  const [lastUpdated, setLastUpdated] = useState(null);
+
   return (
     <HashRouter>
       <div className="app">
@@ -32,12 +68,12 @@ function App() {
         </nav>
 
         <main className="main">
-          <Routes>
-            {tabs.map((tab) => (
-              <Route key={tab.path} path={tab.path} element={<tab.component />} />
-            ))}
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
+          <TabContent
+            fetchCount={fetchCount}
+            setFetchCount={setFetchCount}
+            lastUpdated={lastUpdated}
+            setLastUpdated={setLastUpdated}
+          />
         </main>
       </div>
     </HashRouter>

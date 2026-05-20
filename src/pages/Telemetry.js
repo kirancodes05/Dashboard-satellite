@@ -1,24 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-function Telemetry({ updateCount, isVisible }) {
+function Telemetry({ fetchCount, setFetchCount, lastUpdated, setLastUpdated }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState(null);
-  const [fetchCount, setFetchCount] = useState(0);
   const intervalRef = useRef(null);
+
+  const previousData = useRef(null);
 
   const fetchData = () => {
     fetch('https://api.open-meteo.com/v1/forecast?latitude=17.38&longitude=78.47&current=temperature_2m,windspeed_10m,relativehumidity_2m,surface_pressure,weathercode')
       .then(res => res.json())
       .then(result => {
         const current = result.current;
-        setData({
+        const newData = {
           temperature: current.temperature_2m,
           windSpeed: current.windspeed_10m,
           humidity: current.relativehumidity_2m,
           pressure: current.surface_pressure,
-        });
-        setLastUpdated(new Date().toLocaleTimeString());
+        };
+
+        // Only update state if data actually changed!
+        if (JSON.stringify(newData) !== JSON.stringify(previousData.current)) {
+          setData(newData);
+          previousData.current = newData;
+          setLastUpdated(new Date().toLocaleTimeString());
+        }
+        
         setFetchCount(prev => prev + 1);
         setLoading(false);
       })
@@ -31,9 +38,7 @@ function Telemetry({ updateCount, isVisible }) {
   useEffect(() => {
     fetchData();
     intervalRef.current = setInterval(() => {
-      if (!document.hidden) {
-        fetchData();
-      }
+      fetchData();
     }, 5000);
     return () => clearInterval(intervalRef.current);
   }, []);
@@ -122,8 +127,7 @@ function Telemetry({ updateCount, isVisible }) {
         <div className="data-row"><span className="data-key">Poll Interval</span><span className="data-val">5 seconds</span></div>
         <div className="data-row"><span className="data-key">Last Updated</span><span className="data-val green">{lastUpdated}</span></div>
         <div className="data-row"><span className="data-key">Total Fetches</span><span className="data-val">{fetchCount}</span></div>
-        <div className="data-row"><span className="data-key">Optimization</span><span className="data-val green">Pauses when tab hidden</span></div>
-        <div className="data-row"><span className="data-key">Location</span><span className="data-val">Hyderabad, India</span></div>
+        
       </div>
     </div>
   );
