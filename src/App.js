@@ -1,13 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { HashRouter, NavLink, useLocation, Navigate } from 'react-router-dom';
+import { HashRouter, NavLink, useLocation } from 'react-router-dom';
 import tabs from './tabs';
 import './App.css';
 
-function TabContent({ fetchCount, setFetchCount, lastUpdated, setLastUpdated }) {
+function TabContent({ fetchCount, setFetchCount, lastUpdated, setLastUpdated, visitedTabs }) {
   const location = useLocation();
-  const visitedTabs = useRef(new Set());
-
   const currentPath = location.pathname || '/';
+  
   visitedTabs.current.add(currentPath);
 
   return (
@@ -39,6 +38,7 @@ function TabContent({ fetchCount, setFetchCount, lastUpdated, setLastUpdated }) 
 function App() {
   const [fetchCount, setFetchCount] = useState(0);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const visitedTabs = useRef(new Set());
 
   return (
     <HashRouter>
@@ -73,6 +73,7 @@ function App() {
             setFetchCount={setFetchCount}
             lastUpdated={lastUpdated}
             setLastUpdated={setLastUpdated}
+            visitedTabs={visitedTabs}
           />
         </main>
       </div>
