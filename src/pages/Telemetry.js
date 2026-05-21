@@ -41,7 +41,8 @@ function Telemetry({ fetchCount, setFetchCount, lastUpdated, setLastUpdated }) {
       fetchData();
     }, 5000);
     return () => clearInterval(intervalRef.current);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
 
   if (loading) return <div className="page-title">Fetching Live Telemetry...</div>;
 
